@@ -1,0 +1,91 @@
+/**
+ *  创建一个test_gralde文件夹。然后在文件夹里面创建一个build.gradle文件。注意文件名不要乱起。
+ *
+ *   执行步骤分析：
+ *   build.gradle是Gradle默认的构建脚本文件，
+ *   执行Gradle命令的时候，会默认加载当前目录下的build.gradle脚本文件，
+ *   当然你也可以通过 -b 参数指定想要加载执行的文件。
+ *   这只是个最简单的task例子，后面详细介绍task的常见定义
+ *
+ *
+ * 这个构建脚本定义一个任务（Task），任务名字叫helloworld，并且给任务helloworld添加了一个动作，官方名字是Action，阅读Gradle源代码你会到处见到它，其实他就是一段Groovy语言实现的闭包，doLast就意味着在Task执行完毕之后要回调doLast的这部分闭包的代码实现。第二个方法中的“<<”表示向helloworld中加入执行代码。至于语法部分，基本是Groovy语法（包括一些语法糖，也就是写简写方式，如果写个JavaScript或者Python会好理解一些，但是还是建议去读一下groovy的基本语法），加上一些DSL（domain specific language）的约定
+ *
+ * 链接：https://www.jianshu.com/p/001abe1d8e95
+ */
+
+task helloWorld {
+    println 'Hello World'
+}
+
+task helloworld2 << {
+    println 'Hello World2!'
+}
+
+/**
+ * 这段代码的含义：给Project添加一个名为“myTask”的任务
+ * 用一个闭包来配置这个任务,Task提供了doFirst和doLast方法来给自己添加Action
+ */
+task myTask {
+
+    doFirst{
+        println 'hello'
+    }
+
+    doLast{
+        println 'world'
+    }
+
+}
+
+/**
+ * task的依赖关系
+ * Gradle不提供内建的项目生命周期管理，只是java Plugin向Project中添加了许多Task，这些Task依次执行，为我们营造了一种如同Maven般项目构建周期。那么这些task是如何依次执行的这就用到声明的依赖关系t
+ *
+ * 运行结果会先执行taskB的打印，然后执行taskA的打印
+ */
+task taskA<<{
+    println 'this is taskA from project 1'
+}
+
+task taskB<<{
+    println 'this is taskB from project 2'
+}
+
+taskA.dependsOn taskB
+
+
+
+//apply plugin:DateAndTimePlugin
+//
+//dateAndTime{
+//
+//    dateFormat = 'yyyy-mm-dd'
+//    timeFormat = 'hh-mm-ss'
+//
+//}
+//
+//class DateAndTimePlugin implements Plugin<Project>{
+//
+//
+//    @Override
+//    void apply(Project target) {
+//
+//        project.extensions.create("dateTime",DateAndTimePluginExtension,)
+//
+//        project.task("showTime",new Date().format(project.dateAndTime.timeFormat))
+//
+//    }
+//}
+//
+//class DateAndTimePluginExtension{
+//
+//    String dateFormat = "yyyy-mm-dd"
+//    String timeFormat = "yyyy-mm-dd HH:mm:ss"
+//
+//}
+
+
+
+
+
+
